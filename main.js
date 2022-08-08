@@ -1,12 +1,21 @@
-const url_list = require('./data.json');
-const axios = require('axios');
+const puppeteer = require('puppeteer');
 
-function getUrl(url){
-   axios.get(url)
-   .then(result => console.log(result))
-   .catch(error => console.log(error))
-} 
+async function scraper() {
+   const browser = await puppeteer.launch();
+   const page = await browser.newPage();
+   await page.goto('https://br.betano.com/');
+   await page.waitForTimeout(3000);
+   
 
 
-getUrl('https://br.betano.com/');
+   
+   console.log('teste');
 
+   browser.close();
+
+
+
+
+}
+
+scraper();

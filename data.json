@@ -1,15 +1,17 @@
 [
     {
         "nome": "bet365",
-        "url": "https://https://www.bet365.com/"
+        "url": "https://www.bet365.com/"
+        
+          
     },
     {
         "nome": "Betano",
-        "url": "https://https://br.betano.com/"
+        "url": "https://br.betano.com/"
     },
     {
         "nome": "Betfair",
-        "url": "https://https://www.betfair.com/br"
+        "url": "https://www.betfair.com/br"
     },
     {
         "nome": "1xBet",
@@ -36,7 +38,7 @@
         "url": "https://sportsbet.io/pt/sports"
     },
     {
-        "nome": "LeoVegas",
+        "nome": "LeoVegas",             
         "url": "https://www.leovegas.com/pt-br/"
     }
 ]
