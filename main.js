@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const houses_obj = require('./objects.js')
 
 async function scraper() {
    const browser = await puppeteer.launch();

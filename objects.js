@@ -1,3 +1,6 @@
+import xpath from 'xpath';
+
+
 const houses_obj = {
     houses: [
         {
@@ -13,13 +16,13 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
             
-
-           
-            
-            
-
         },
         {
             name: "Betano",
@@ -34,7 +37,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "Betfair",
@@ -49,7 +57,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "1xBet",
@@ -64,7 +77,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "Betmotion",
@@ -79,7 +97,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+
+            }
         },
         {
             name: "Dafabet",
@@ -94,7 +117,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "Betsson",
@@ -109,7 +137,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "Betway",
@@ -124,7 +157,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "Sportsbet.io",
@@ -139,7 +177,12 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         },
         {
             name: "LeoVegas",             
@@ -154,62 +197,69 @@ const houses_obj = {
                 away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
             },
             xpath_group: [],
-            house_events: []
+            raw_events_array: [],
+            processed_events_array: [],
+            ordered_events_array: [],
+            rawArrayProcessing: function(){
+                
+            }
         }
     ],
+   
+    xpathAssembler: function(parent_xpath, id_group) {
 
-    //console.log(Object.values(houses[0].xpath_group));
-    //Constructor
-
-    eventConstruct: function(date, home_team, away_team, home_odds, draw_odds, away_odds){
-
-        this.date = date;
-        this.home_team = home_team;
-        this.away_team = away_team;
-        this.home_odds = home_odds;
-        this.draw_odds = draw_odds;
-        this.away_odds = away_odds;
-
-    },
-
-
-    /*xpathGroupSetter: function() {
-
-        this.houses.forEach(function(parent) {
-            parent.id_group.forEach(function(child) {
-                console.log(child);
-            });    
-            
-        });
-
-    },*/
-
-
-    xpathAssembler: function(par_xpath, class_id) {
-
-        return (par_xpath + "[@class='" + class_id + "']");
+        return (parent_xpath + "[@class='" + id_group + "']");
         
     },
 
     xpathGroupSetter: function() {
 
-         for(i = 0; i < this.houses.length; i++){
-            for(j = 0; j < Object.keys(this.houses[i].id_group).length; j++){
+         for(i = 0; i < houses_obj.houses.length; i++){
+            for(j = 0; j < Object.keys(houses_obj.houses[i].id_group).length; j++){
 
-                this.houses[i].xpath_group[j] = this.xpathAssembler(this.houses[i].parent_xpath, Object.values(this.houses[i].id_group)[j]);
-                //console.log(Object.values(this.houses[i].id_group)[j]);
-                console.log(this.houses[i].xpath_group[j]);
+                houses_obj.houses[i].xpath_group[j] = houses_obj.xpathAssembler(houses_obj.houses[i].parent_xpath, Object.values(houses_obj.houses[i].id_group)[j]);
+    
+                //console.log(this.houses[i].xpath_group[j]);
 
             }
-            
-            
         }
-    }
+    },
 
-    //const event = [];
+
+    urlArrayGetter: function() {
+
+        url_array = [];
+        for(i = 0; i < houses_obj.houses.length; i++){
+            url_array[i] = houses_obj.houses[i].url;
+        }
+        return url_array;
+    },
+
+
+    rawEventArrayBuilder: function(xpath_group, url_array){
+
+        for(i = 0; i < url_array.length; i++){
+            for(j = 0; j < xpath_group; j++){
+                houses_obj.houses[i].raw_events_array[j] = xpath.select(xpath_group[j], url_array[i]).data;
+            }
+        }
+        
+    },
+
+    processedEventArrayBuilder: function(rawArrayProcessing){
+
+        rawArrayProcessing();
+
+    }
 }
 
-houses_obj.xpathGroupSetter();
+//houses_obj.xpathGroupSetter();
+
+//houses_obj.urlGetter();
+
+
+
+module.exports = houses_obj;
 
 
 /*
@@ -242,4 +292,13 @@ for(index = 1; index <= date.length; index++){
 
 
 */
+/*eventConstruct: function(date, home_team, away_team, home_odds, draw_odds, away_odds){
 
+        this.date = date;
+        this.home_team = home_team;
+        this.away_team = away_team;
+        this.home_odds = home_odds;
+        this.draw_odds = draw_odds;
+        this.away_odds = away_odds;
+
+    },*/
