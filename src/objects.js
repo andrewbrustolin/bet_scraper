@@ -1,14 +1,17 @@
-import xpath from 'xpath';
+import puppeteer from 'puppeteer';
 
 
-const houses_obj = {
+export const houses_obj = {
     houses: [
         {
             name: "bet365",
             url: "https://www.bet365.com/#/AC/B1/C1/D1002/E71022033/G40/",
             parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
+            //$x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
+            //console.log($x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]/text()")[1])
+            //$x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")[1].textContent
             id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
+                date_dom_id: "rcl-MarketHeaderLabel-isdate",
                 home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
                 away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
                 home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
@@ -40,7 +43,8 @@ const houses_obj = {
             raw_events_array: [],
             processed_events_array: [],
             ordered_events_array: [],
-            rawArrayProcessing: function(){
+            rawArrayProcessing: function(raw_events_array){
+                
                 
             }
         },
@@ -214,37 +218,49 @@ const houses_obj = {
 
     xpathGroupSetter: function() {
 
-         for(i = 0; i < houses_obj.houses.length; i++){
-            for(j = 0; j < Object.keys(houses_obj.houses[i].id_group).length; j++){
+         for(let i = 0; i < houses_obj.houses.length; i++){
+            for(let j = 0; j < Object.keys(houses_obj.houses[i].id_group).length; j++){
 
                 houses_obj.houses[i].xpath_group[j] = houses_obj.xpathAssembler(houses_obj.houses[i].parent_xpath, Object.values(houses_obj.houses[i].id_group)[j]);
+                
     
                 //console.log(this.houses[i].xpath_group[j]);
 
             }
         }
+        return houses_obj.houses[0].xpath_group;
     },
 
 
     urlArrayGetter: function() {
 
-        url_array = [];
-        for(i = 0; i < houses_obj.houses.length; i++){
+        const url_array = [];
+        for(let i = 0; i < houses_obj.houses.length; i++){
             url_array[i] = houses_obj.houses[i].url;
         }
+        
         return url_array;
     },
 
-
     rawEventArrayBuilder: function(xpath_group, url_array){
 
-        for(i = 0; i < url_array.length; i++){
-            for(j = 0; j < xpath_group; j++){
+        for(let i = 0; i < url_array.length; i++){
+            for(let j = 0; j < xpath_group.length; j++){
                 houses_obj.houses[i].raw_events_array[j] = xpath.select(xpath_group[j], url_array[i]).data;
             }
         }
-        
+        console.log(houses_obj.houses[0].raw_events_array[1]);
     },
+
+    // rawEventArrayBuilder: function(xpath_group, url_array){
+
+    //     for(let i = 0; i < url_array.length; i++){
+    //         for(let j = 0; j < xpath_group.length; j++){
+    //             houses_obj.houses[i].raw_events_array[j] = xpath.select(xpath_group[j], url_array[i]).data;
+    //         }
+    //     }
+    //     console.log(houses_obj.houses[0].raw_events_array[1]);
+    // },
 
     processedEventArrayBuilder: function(rawArrayProcessing){
 
@@ -259,7 +275,7 @@ const houses_obj = {
 
 
 
-module.exports = houses_obj;
+
 
 
 /*
