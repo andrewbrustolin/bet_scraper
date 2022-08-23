@@ -212,7 +212,8 @@ export const houses_obj = {
    
     xpathAssembler: function(parent_xpath, id_group) {
 
-        return (parent_xpath + "[@class='" + id_group + "']");
+        //[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
+        return (parent_xpath + "[contains(@class, '" + id_group + "')]");
         
     },
 
@@ -228,7 +229,7 @@ export const houses_obj = {
 
             }
         }
-        return houses_obj.houses[0].xpath_group;
+    
     },
 
 
@@ -242,11 +243,15 @@ export const houses_obj = {
         return url_array;
     },
 
-    rawEventArrayBuilder: function(xpath_group, url_array){
+    rawEventArrayBuilder: async function(selectorFunction, waitXPathFunction){
+
+        const url_array = houses_obj.urlArrayGetter();
 
         for(let i = 0; i < url_array.length; i++){
-            for(let j = 0; j < xpath_group.length; j++){
-                houses_obj.houses[i].raw_events_array[j] = xpath.select(xpath_group[j], url_array[i]).data;
+            for(let j = 0; j < houses_obj.houses[i].xpath_group.length; j++){
+
+                await waitXPathFunction(houses_obj.houses[i].xpath_group[j]);
+                houses_obj.houses[i].raw_events_array[j] = selectorFunction(xpath_group[j], url_array[i]).data;
             }
         }
         console.log(houses_obj.houses[0].raw_events_array[1]);

@@ -15,26 +15,48 @@ const headers = {
  };
 
 async function scraper() {
-   const browser = await puppeteer.launch();
-   const page = await browser.newPage();
-   await page.setExtraHTTPHeaders(headers);
 
-   await page.goto('https://www.bet365.com/#/AC/B1/C1/D1002/E71022033/G40/');
-   //await page.waitForSelector('#xyz');
+   const browser = await puppeteer.launch({headless:false});
+   const page = [];
+   const url_array = houses_obj.urlArrayGetter();
+   //houses_obj.xpathGroupSetter();
 
+   for (let i = 0; i < 2 /*url_array.length*/; i++) {
 
-   houses_obj.rawEventArrayBuilder(houses_obj.xpathGroupSetter(), houses_obj.urlArrayGetter());
+      page[i] = await browser.newPage();
+      //page[i].setExtraHTTPHeaders(headers);
+      await page[i].goto(url_array[i]);
+
+      
+
+   }
+
+   
+
+      
+   //houses_obj.rawEventArrayBuilder(page.$x, page.waitForXPath); 
+
+   
+
    
    
-   await page.waitForTimeout(3000);
+
+   
+  
+
+
+
+   
+   
+   
    
 
 
    
    console.log('fim');
    
-
-   browser.close();
+   setTimeout(() => browser.close(), 10000);
+   
 
 
 
