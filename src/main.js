@@ -1,40 +1,55 @@
 import puppeteer from 'puppeteer';
 import { houses_obj } from './objects.js';
 
-const headers = {
-   'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-   'accept-encoding': 'gzip, deflate, br',
-   'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-   'cache-control': 'max-age=0',
-   'connection': 'keep-alive',
-   'sec-fetch-mode': 'navigate',
-   'sec-fetch-site': 'none',
-   'sec-fetch-user': '?1',
-   'upgrade-insecure-requests': '1',
-   'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
- };
-
 async function scraper() {
-
-   const browser = await puppeteer.launch({headless:false});
+   const browser = await puppeteer.launch(/*{headless:false}*/);
    const page = [];
    const url_array = houses_obj.urlArrayGetter();
-   //houses_obj.xpathGroupSetter();
-
-   for (let i = 0; i < 2 /*url_array.length*/; i++) {
-
+   houses_obj.xpathGroupSetter();
+   
+   for (let i = 0; i < url_array.length; i++) {
       page[i] = await browser.newPage();
-      //page[i].setExtraHTTPHeaders(headers);
-      await page[i].goto(url_array[i]);
+      await page[i].setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36');
+      console.log(await page[i].evaluate(() => navigator.userAgent));
+      // page[i].setDefaultTimeout(0);
+      await page[i].goto(url_array[i], {waitUntil: 'networkidle2'});
+   }
+   
+   let buffer = [];
+   for (let i = 0; i < url_array.length; i++) {
+      for(let j = 0; j < houses_obj.houses[i].xpath_group.length; j++){
 
-      
+         await page[i].waitForXPath(houses_obj.houses[i].xpath_group[j]);
+         buffer = await page[i].$x(houses_obj.houses[i].xpath_group[j]); //array with k elements in it
 
+         for(let k = 0; k < buffer.length; k++){
+            buffer[k] = await page[i].evaluate(tx => tx.innerText, buffer[k]);
+         }
+
+         //console.log(buffer);
+         houses_obj.houses[i].raw_events_array[j] = buffer;
+         
+
+      }
+     
    }
 
+  
+
+
+   houses_obj.eventArrayProcessing();
+   houses_obj.sureBetStake();
+   
+   
+   
+
+   
+  
+   
    
 
       
-   //houses_obj.rawEventArrayBuilder(page.$x, page.waitForXPath); 
+  
 
    
 
@@ -55,7 +70,7 @@ async function scraper() {
    
    console.log('fim');
    
-   setTimeout(() => browser.close(), 10000);
+   //setTimeout(() => browser.close(), 10000);
    
 
 

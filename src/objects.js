@@ -1,325 +1,560 @@
 import puppeteer from 'puppeteer';
+import _ from 'lodash';
 
 
 export const houses_obj = {
     houses: [
         {
-            name: "bet365",
-            url: "https://www.bet365.com/#/AC/B1/C1/D1002/E71022033/G40/",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            //$x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
-            //console.log($x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]/text()")[1])
-            //$x("/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]//div[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")[1].textContent
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
-                
-            }
-            
-        },
-        {
             name: "Betano",
-            url: "https://br.betano.com/",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
+            url: "https://br.betano.com/sport/futebol/brasil/brasileirao-serie-a/10016/",
+            parent_xpath: "/html/body/div[1]/div/section[2]/div[5]/div[2]/section/div[5]/div[2]/div[1]/div[2]/table//*",
             id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
+                home_team_dom_id: "events-list__grid__info__main__participants__participant-name",
+                away_team_dom_id: "events-list__grid__info__main__participants__participant-name",
+                home_odds_dom_id: "selections__selection__odd",
+                draw_odds_dom_id: "selections__selection__odd",
+                away_odds_dom_id: "selections__selection__odd"
             },
             xpath_group: [],
             raw_events_array: [],
             processed_events_array: [],
-            ordered_events_array: [],
+            
+
             rawArrayProcessing: function(raw_events_array){
+
+                const hometeam_array = [];
+                const awayteam_array = [];
+                const homeodds_array = [];
+                const drawodds_array = [];
+                const awayodds_array = [];
+
+                (function hometeam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[0].length; j++){
+                        if ((j % 2) == 0){
+                            hometeam_array.push(raw_events_array[0][j]);
+                        }
+                    }
+                })();
+                (function awayteam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[1].length; j++){
+                        if ((j % 2) != 0){
+                            awayteam_array.push(raw_events_array[1][j]);
+                        }                     
+                    }
+                })();
+                (function homeodds_table(){
+                    
+                    for (let j = 0; j < raw_events_array[2].length; j = j + 3){
+                        homeodds_array.push(raw_events_array[2][j]);
+                    }                   
+                })();
+                (function drawodds_table(){
+                    
+                    for (let j = 1; j < raw_events_array[3].length; j = j + 3){
+                        drawodds_array.push(raw_events_array[3][j]);
+                    }                   
+                })();
+                (function awayodds_table(){
+                    
+                    for (let j = 2; j < raw_events_array[4].length; j = j + 3){
+                        awayodds_array.push(raw_events_array[4][j]);
+                    }                   
+                })();
                 
+                const processed_array = [];
+                const processed_array_size = (raw_events_array[0].length)/2;
+                for (let i = 0; i < processed_array_size; i++) {
+                        processed_array[i] = [];
+                    
+                }
                 
+                for (let i = 0; i < processed_array_size; i++){
+                    processed_array[i].push(hometeam_array[i]);
+                    processed_array[i].push(awayteam_array[i]);
+                    processed_array[i].push(homeodds_array[i]);
+                    processed_array[i].push(drawodds_array[i]);
+                    processed_array[i].push(awayodds_array[i]);
+                }
+
+                return processed_array;
             }
         },
         {
             name: "Betfair",
-            url: "https://www.betfair.com/br",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
+            url: "https://www.betfair.com/sport/football/brasil-s%C3%A9rie-a/13",
+            parent_xpath: "/html/body/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[3]/div/ul//div//span",
             id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
+                home_team_dom_id: "team-name",
+                away_team_dom_id: "team-name",
+                home_odds_dom_id: "ui-runner-price",
+                draw_odds_dom_id: "ui-runner-price",
+                away_odds_dom_id: "ui-runner-price"
             },
             xpath_group: [],
             raw_events_array: [],
             processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
-                
-            }
-        },
-        {
-            name: "1xBet",
-            url: "https://br.1xbet.com/pt",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
-                
-            }
-        },
-        {
-            name: "Betmotion",
-            url: "https://www.betmotion.com/br/S",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+            
 
-            }
-        },
-        {
-            name: "Dafabet",
-            url: "https://www.dafabet.com/pt",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+            rawArrayProcessing: function(raw_events_array){
+
+                const hometeam_array = [];
+                const awayteam_array = [];
+                const homeodds_array = [];
+                const drawodds_array = [];
+                const awayodds_array = [];
+
+                (function hometeam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[0].length; j++){
+                        if ((j % 2) == 0){
+                            hometeam_array.push(raw_events_array[0][j]);
+                        }
+                    }
+                })();
+                (function awayteam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[1].length; j++){
+                        if ((j % 2) != 0){
+                            awayteam_array.push(raw_events_array[1][j]);
+                        }                     
+                    }
+                })();
+                (function homeodds_table(){
+                    
+                    for (let j = 0; j < raw_events_array[2].length; j = j + 4){
+                        homeodds_array.push(raw_events_array[2][j]);
+                    }                   
+                })();
+                (function drawodds_table(){
+                    
+                    for (let j = 1; j < raw_events_array[3].length; j = j + 4){
+                        drawodds_array.push(raw_events_array[3][j]);
+                    }                   
+                })();
+                (function awayodds_table(){
+                    
+                    for (let j = 2; j < raw_events_array[4].length; j = j + 4){
+                        awayodds_array.push(raw_events_array[4][j]);
+                    }                   
+                })();
                 
+                const processed_array = [];
+                const processed_array_size = (raw_events_array[0].length)/2;
+                // 2 teams, so the array size after processing must be half length
+                for (let i = 0; i < processed_array_size; i++) {
+                        processed_array[i] = [];
+                    
+                }
+                
+                for (let i = 0; i < processed_array_size; i++){
+                    processed_array[i].push(hometeam_array[i]);
+                    processed_array[i].push(awayteam_array[i]);
+                    processed_array[i].push(homeodds_array[i]);
+                    processed_array[i].push(drawodds_array[i]);
+                    processed_array[i].push(awayodds_array[i]);
+                }
+
+                return processed_array;
             }
         },
         {
             name: "Betsson",
-            url: "https://www.betsson.com/br",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
+            url: "https://www.betsson.com/br/apostas-esportivas/futebol/brasil/brasileirao-serie-a",
+            parent_xpath: "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-sportsbook-cards-container/obg-glide/section/div[1]//*",
             id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
+                home_team_dom_id: "obg-sportsbook-card-participant-label ng-star-inserted",
+                away_team_dom_id: "obg-sportsbook-card-participant-label ng-star-inserted",
+                home_odds_dom_id: "obg-numeric-change ng-star-inserted",
+                draw_odds_dom_id: "obg-numeric-change ng-star-inserted",
+                away_odds_dom_id: "obg-numeric-change ng-star-inserted"
             },
             xpath_group: [],
             raw_events_array: [],
             processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+            
+            
+            rawArrayProcessing: function(raw_events_array){
+
+                const hometeam_array = [];
+                const awayteam_array = [];
+                const homeodds_array = [];
+                const drawodds_array = [];
+                const awayodds_array = [];
+
+                (function hometeam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[0].length; j++){
+                        if ((j % 2) == 0){
+                            hometeam_array.push(raw_events_array[0][j]);
+                        }
+                    }
+                })();
+                (function awayteam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[1].length; j++){
+                        if ((j % 2) != 0){
+                            awayteam_array.push(raw_events_array[1][j]);
+                        }                     
+                    }
+                })();
+                (function homeodds_table(){
+                    
+                    for (let j = 0; j < raw_events_array[2].length; j = j + 3){
+                        homeodds_array.push(raw_events_array[2][j]);
+                    }                   
+                })();
+                (function drawodds_table(){
+                    
+                    for (let j = 1; j < raw_events_array[3].length; j = j + 3){
+                        drawodds_array.push(raw_events_array[3][j]);
+                    }                   
+                })();
+                (function awayodds_table(){
+                    
+                    for (let j = 2; j < raw_events_array[4].length; j = j + 3){
+                        awayodds_array.push(raw_events_array[4][j]);
+                    }                   
+                })();
                 
+                const processed_array = [];
+                const processed_array_size = (raw_events_array[0].length)/2;
+                // 2 teams, so the array size after processing must be half length
+                for (let i = 0; i < processed_array_size; i++) {
+                        processed_array[i] = [];
+                    
+                }
+                
+                for (let i = 0; i < processed_array_size; i++){
+                    processed_array[i].push(hometeam_array[i]);
+                    processed_array[i].push(awayteam_array[i]);
+                    processed_array[i].push(homeodds_array[i]);
+                    processed_array[i].push(drawodds_array[i]);
+                    processed_array[i].push(awayodds_array[i]);
+                }
+
+                
+                return processed_array;
             }
         },
+
         {
             name: "Betway",
-            url: "https://betway.com/pt/sports",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
+            url: "https://betway.com/pt/sports/grp/soccer/brazil/brasileiro-serie-a",
+            parent_xpath: "/html/body/div[1]/div/div[3]/div/div[1]/div/div[2]/div[4]/div/div[3]/div[2]//*",
             id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
+                home_team_dom_id: "teamNameHomeTextFirstPart",
+                away_team_dom_id: "teamNameAwayTextFirstPart",
+                home_odds_dom_id: "odds",
+                draw_odds_dom_id: "odds",
+                away_odds_dom_id: "odds"
             },
             xpath_group: [],
             raw_events_array: [],
             processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+            
+            
+            rawArrayProcessing: function(raw_events_array){
+
+                const hometeam_array = [];
+                const awayteam_array = [];
+                const homeodds_array = [];
+                const drawodds_array = [];
+                const awayodds_array = [];
+
+                (function hometeam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[0].length; j++){
+                        hometeam_array.push(raw_events_array[0][j]);
+                    }
+                })();
+                (function awayteam_table(){
+                    
+                    for (let j = 0; j < raw_events_array[1].length; j++){
+                            awayteam_array.push(raw_events_array[1][j]);
+                    }
+                })();
+                (function homeodds_table(){
+                    
+                    for (let j = 2; j < raw_events_array[2].length; j = j + 3){
+
+                        homeodds_array.push(raw_events_array[2][j].replace(",","."))
+                    }                   
+                })();
+                (function drawodds_table(){
+                    
+                    for (let j = 5; j < raw_events_array[3].length; j = j + 3){
+                        drawodds_array.push(raw_events_array[3][j].replace(",","."));
+                    }                   
+                })();
+                (function awayodds_table(){
+                    
+                    for (let j = 8; j < raw_events_array[4].length; j = j + 3){
+                        awayodds_array.push(raw_events_array[4][j].replace(",","."));
+                    }                   
+                })();
                 
-            }
-        },
-        {
-            name: "Sportsbet.io",
-            url: "https://sportsbet.io/pt/sports",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+                const processed_array = [];
+                const processed_array_size = (raw_events_array[0].length)/2;
+                // 2 teams, so the array size after processing must be half length
+                for (let i = 0; i < processed_array_size; i++) {
+                        processed_array[i] = [];
+                    
+                }
                 
-            }
-        },
-        {
-            name: "LeoVegas",             
-            url: "https://www.leovegas.com/pt-br/",
-            parent_xpath: "/html/body/div[1]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div[2]/div/div/div[2]/div[2]/div",
-            id_group: {
-                date_dom_id: "rcl-MarketHeaderLabel rcl-MarketHeaderLabel-isdate",
-                home_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                away_team_dom_id: "rcl-ParticipantFixtureDetailsTeam_TeamName",
-                home_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                draw_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds",
-                away_odds_dom_id: "sgl-ParticipantOddsOnly80_Odds"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
-            ordered_events_array: [],
-            rawArrayProcessing: function(){
+                for (let i = 0; i < processed_array_size; i++){
+                    processed_array[i].push(hometeam_array[i]);
+                    processed_array[i].push(awayteam_array[i]);
+                    processed_array[i].push(homeodds_array[i]);
+                    processed_array[i].push(drawodds_array[i]);
+                    processed_array[i].push(awayodds_array[i]);
+                }
+
                 
+                return processed_array;
             }
         }
     ],
    
-    xpathAssembler: function(parent_xpath, id_group) {
 
-        //[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
-        return (parent_xpath + "[contains(@class, '" + id_group + "')]");
+    eventArrayProcessing: function(){
+        for (let i = 0; i < houses_obj.houses.length; i++){
+            houses_obj.houses[i].processed_events_array = houses_obj.houses[i].rawArrayProcessing(houses_obj.houses[i].raw_events_array);
+            for (let j = 0; j < houses_obj.houses[i].processed_events_array.length; j++){
+                houses_obj.houses[i].processed_events_array[j].unshift(houses_obj.houses[i].name);
+            }
+            //console.log(houses_obj.houses[i].processed_events_array);
+        }
+
+    },
+
+
+    eventArrayMatching: function(){
+        let array_matcher = [];
+        let buffer = [];
+
+       (function shallowCloning() {
+            for (let i = 0; i < houses_obj.houses.length; i++){
+                buffer[i] = houses_obj.houses[i].processed_events_array;
+            }
+       })();
+
+       (function emptyArrayMatcherCreation(){
+            let maxpossible = 0; //max possible amount of unique events
+            for (let i = 0; i < houses_obj.houses.length; i++){
+                maxpossible = houses_obj.houses[i].processed_events_array.length + maxpossible;
+            }
+            for (let s = 0; s < maxpossible; s++){
+                array_matcher[s] = [];
+            }
+        })();
+
         
+        for (let m = 0, index = 0; m < (houses_obj.houses.length - 1); m++){
+            for (let k = 0; k < buffer[m].length; k++, index++){
+                array_matcher[index].push(buffer[m][k]);
+                for (let n = (m + 1); n < houses_obj.houses.length; n++){
+                    for (let j = 0; j < buffer[n].length; j++){
+                        if ((buffer[m][k][1] + buffer[m][k][2]) == (buffer[n][j][1] + buffer[n][j][2])){
+                            array_matcher[index].push(buffer[n][j]);
+                        } 
+                    }
+                }
+            }
+        }
+
+        array_matcher = array_matcher.filter((a) => a.length == 3);
+        return array_matcher;
+    },
+
+    probabilityCalc: function(){
+        const array = this.eventArrayMatching();
+        for (let i = 0; i < array.length; i++){
+            for (let j = 0; j < array[i].length; j++){
+                array[i][j][3] = 1/Number(array[i][j][3]);
+                array[i][j][4] = 1/Number(array[i][j][4]);
+                array[i][j][5] = 1/Number(array[i][j][5]);
+            }
+            
+        }
+        return array;
+    },
+
+
+    preSureBetCalc: function(){
+        const prob_array = this.probabilityCalc();
+        const aux = ["Home victory: ", "Draw: ", "Away victory: "];
+        let counter = 0;
+        //console.log(prob_array);
+
+        let array = [];
+        let max_number = 6;
+        let football_type_size = 3;
+        let football_type_array_length = 5;
+        for (let x = 0; x < prob_array.length; x++){
+            array[x] = [];
+            for (let y = 0; y < max_number; y++){
+                array[x][y] = [];
+                for (let z = 0; z < football_type_size; z++){
+                    array[x][y][z] = [];
+                    for (let w = 0; w < football_type_array_length; w++){
+                        array[x][y][z][w] = 0;
+                    }
+                }
+            }
+        }
+        //console.log(array);
+        
+        //console.log(array[0][0][0]);
+
+
+
+
+        for (let i = 0; i < prob_array.length; i++){        
+            for(let j = 0; j < 3; j++){                             
+                for(let k = 0; k < 3; k++){
+                    if (k != j){                                           
+                        for(let l = 0; l < 3; l++){
+                            if ((l != k) && (l != j)){
+
+                                //console.log("name is :" + prob_array[i][j][0], ", counter is: " + counter);
+
+                                array[i][counter][j][0] = prob_array[i][0][0]; //housename
+                                array[i][counter][j][1] = prob_array[i][0][1]; //hometeam
+                                array[i][counter][j][2] = prob_array[i][0][2]; //awayteam
+                                array[i][counter][j][3] = aux[j]; //result
+                                array[i][counter][j][4] = prob_array[i][0][j+3]; //result odds
+
+                                array[i][counter][k][0] = prob_array[i][1][0]; //housename
+                                array[i][counter][k][1] = prob_array[i][1][1]; //hometeam
+                                array[i][counter][k][2] = prob_array[i][1][2]; //awayteam
+                                array[i][counter][k][3] = aux[k]; //result
+                                array[i][counter][k][4] = prob_array[i][1][k+3]; //result odds
+                                
+    
+                                array[i][counter][l][0] = prob_array[i][2][0]; //housename
+                                array[i][counter][l][1] = prob_array[i][2][1]; //hometeam
+                                array[i][counter][l][2] = prob_array[i][2][2]; //awayteam
+                                array[i][counter][l][3] = aux[l]; //result
+                                array[i][counter][l][4] = prob_array[i][2][l+3]; //result odds
+                                
+                                counter++;
+                            }
+                        }
+                    }
+                }
+            }
+            counter = 0;
+        }
+        return array;           
+    },
+
+    sureBetCalc: function(){
+        let array = houses_obj.preSureBetCalc();
+        let sum = 0;
+        let buffer = [];
+       
+
+        for (let i = 0; i < array.length; i++){ 
+            for (let j = 0; j < array[i].length; j++){
+                for (let k = 0; k < array[i][j].length; k++){
+                    sum = sum + array[i][j][k][4];
+
+                    
+                    
+
+                    
+                }
+                if (sum < 1){
+
+                    buffer.push(array[i][j]);
+                    
+                 
+
+                }
+                
+                sum = 0;
+            }
+        }
+        //console.log(buffer);
+        return buffer;
+
+    },
+
+    sureBetStake: function() {
+        let array = this.sureBetCalc();
+        let buffer = [];
+
+
+        
+
+
+
+
+        let string0 = "O evento e': " + teamA + " x " + teamB; 
+        let string1 = "Seu investimento total e': " + total_stake;
+        let string2 = "Investir R$ " + stake + " no time: " + teamA + "na casa de aposta: " + bookmaker;
+        let string3 = "Investir R$ " + stake + " no empate " + "na casa de aposta: " + bookmaker;
+        let string4 = "Investir R$ " + stake + " no time: " + teamA + "na casa de aposta: " + bookmaker;
+        let string5 = "Seu lucro total sera': " + total_earnings;    
+        let stake = 0;
+        let total_stake = 0;
+
+
+    }
+
+    xpathAssembler: function(parent_xpath, id_group) {
+        
+            if (parent_xpath === "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-sportsbook-cards-container/obg-glide/section/div[1]//*"){
+                return (parent_xpath + "[contains(@class,'" + id_group + "')]//span");
+            } else {
+                //[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
+                return (parent_xpath + "[contains(@class,'" + id_group + "')]");
+            }
+                    
     },
 
     xpathGroupSetter: function() {
-
          for(let i = 0; i < houses_obj.houses.length; i++){
             for(let j = 0; j < Object.keys(houses_obj.houses[i].id_group).length; j++){
-
                 houses_obj.houses[i].xpath_group[j] = houses_obj.xpathAssembler(houses_obj.houses[i].parent_xpath, Object.values(houses_obj.houses[i].id_group)[j]);
-                
-    
                 //console.log(this.houses[i].xpath_group[j]);
-
             }
         }
-    
+        
     },
 
-
     urlArrayGetter: function() {
-
         const url_array = [];
         for(let i = 0; i < houses_obj.houses.length; i++){
             url_array[i] = houses_obj.houses[i].url;
         }
-        
         return url_array;
-    },
+    }
+}
 
-    rawEventArrayBuilder: async function(selectorFunction, waitXPathFunction){
+    // rawEventArrayBuilder: async function(url_array, page){
 
-        const url_array = houses_obj.urlArrayGetter();
+    //     for (let i = 0; i < url_array.length; i++) {
+    //         for(let j = 0; j < houses_obj.houses[i].xpath_group.length; j++){
+      
+    //            await page[i].waitForXPath(houses_obj.houses[i].xpath_group[j]);
+    //            houses_obj.houses[i].raw_events_array[j] = page[i].$x(xpath_group[j], url_array[i]);
 
-        for(let i = 0; i < url_array.length; i++){
-            for(let j = 0; j < houses_obj.houses[i].xpath_group.length; j++){
-
-                await waitXPathFunction(houses_obj.houses[i].xpath_group[j]);
-                houses_obj.houses[i].raw_events_array[j] = selectorFunction(xpath_group[j], url_array[i]).data;
-            }
-        }
-        console.log(houses_obj.houses[0].raw_events_array[1]);
-    },
-
-    // rawEventArrayBuilder: function(xpath_group, url_array){
-
-    //     for(let i = 0; i < url_array.length; i++){
-    //         for(let j = 0; j < xpath_group.length; j++){
-    //             houses_obj.houses[i].raw_events_array[j] = xpath.select(xpath_group[j], url_array[i]).data;
     //         }
-    //     }
+    //      }
     //     console.log(houses_obj.houses[0].raw_events_array[1]);
     // },
 
-    processedEventArrayBuilder: function(rawArrayProcessing){
+    
 
-        rawArrayProcessing();
-
-    }
-}
-
-//houses_obj.xpathGroupSetter();
-
-//houses_obj.urlGetter();
+   
 
 
 
 
 
 
-/*
+   
 
-for(n = 0; n < houses.length; n++){
-
-
-
-
-
-
-    while(event.date = "13 agosto"){
-
-        let event[i] = new event_construct(date[x], home_team[x], away_team[x], home_odds[x], draw_odds[x], away_odds[x]);
-
-        houses[n].house_events.push(event[i]);
-
-
-
-    }
-}
-
-
-
-for(index = 1; index <= date.length; index++){
-
-
-
-}
-
-
-*/
-/*eventConstruct: function(date, home_team, away_team, home_odds, draw_odds, away_odds){
-
-        this.date = date;
-        this.home_team = home_team;
-        this.away_team = away_team;
-        this.home_odds = home_odds;
-        this.draw_odds = draw_odds;
-        this.away_odds = away_odds;
-
-    },*/
