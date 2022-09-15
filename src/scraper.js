@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import { houses_obj } from './objects.js';
 
-async function scraper() {
+export async function scraper() {
    const browser = await puppeteer.launch(/*{headless:false}*/);
    const page = [];
    const url_array = houses_obj.urlArrayGetter();
@@ -11,7 +11,6 @@ async function scraper() {
       page[i] = await browser.newPage();
       await page[i].setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36');
       console.log(await page[i].evaluate(() => navigator.userAgent));
-      // page[i].setDefaultTimeout(0);
       await page[i].goto(url_array[i], {waitUntil: 'networkidle2'});
    }
    
@@ -25,58 +24,19 @@ async function scraper() {
          for(let k = 0; k < buffer.length; k++){
             buffer[k] = await page[i].evaluate(tx => tx.innerText, buffer[k]);
          }
-
-         //console.log(buffer);
          houses_obj.houses[i].raw_events_array[j] = buffer;
-         
-
       }
-     
    }
 
-  
-
-
    houses_obj.eventArrayProcessing();
-   houses_obj.sureBetStake();
    
+   return houses_obj.sureBetStake();
    
-   
-
-   
-  
-   
-   
-
-      
-  
-
-   
-
-   
-   
-
-   
-  
-
-
-
-   
-   
-   
-   
-
-
-   
-   console.log('fim');
    
    //setTimeout(() => browser.close(), 10000);
-   
-
-
 
 
 }
 
-scraper();
+//scraper();
 

@@ -1,7 +1,3 @@
-import puppeteer from 'puppeteer';
-import _ from 'lodash';
-
-
 export const houses_obj = {
     houses: [
         {
@@ -19,7 +15,6 @@ export const houses_obj = {
             raw_events_array: [],
             processed_events_array: [],
             
-
             rawArrayProcessing: function(raw_events_array){
 
                 const hometeam_array = [];
@@ -233,8 +228,6 @@ export const houses_obj = {
                     processed_array[i].push(drawodds_array[i]);
                     processed_array[i].push(awayodds_array[i]);
                 }
-
-                
                 return processed_array;
             }
         },
@@ -253,7 +246,6 @@ export const houses_obj = {
             xpath_group: [],
             raw_events_array: [],
             processed_events_array: [],
-            
             
             rawArrayProcessing: function(raw_events_array){
 
@@ -310,13 +302,10 @@ export const houses_obj = {
                     processed_array[i].push(drawodds_array[i]);
                     processed_array[i].push(awayodds_array[i]);
                 }
-
-                
                 return processed_array;
             }
         }
     ],
-   
 
     eventArrayProcessing: function(){
         for (let i = 0; i < houses_obj.houses.length; i++){
@@ -324,11 +313,8 @@ export const houses_obj = {
             for (let j = 0; j < houses_obj.houses[i].processed_events_array.length; j++){
                 houses_obj.houses[i].processed_events_array[j].unshift(houses_obj.houses[i].name);
             }
-            //console.log(houses_obj.houses[i].processed_events_array);
         }
-
     },
-
 
     eventArrayMatching: function(){
         let array_matcher = [];
@@ -350,7 +336,6 @@ export const houses_obj = {
             }
         })();
 
-        
         for (let m = 0, index = 0; m < (houses_obj.houses.length - 1); m++){
             for (let k = 0; k < buffer[m].length; k++, index++){
                 array_matcher[index].push(buffer[m][k]);
@@ -376,11 +361,9 @@ export const houses_obj = {
                 array[i][j][4] = 1/Number(array[i][j][4]);
                 array[i][j][5] = 1/Number(array[i][j][5]);
             }
-            
         }
         return array;
     },
-
 
     preSureBetCalc: function(){
         const prob_array = this.probabilityCalc();
@@ -404,21 +387,13 @@ export const houses_obj = {
                 }
             }
         }
-        //console.log(array);
         
-        //console.log(array[0][0][0]);
-
-
-
-
         for (let i = 0; i < prob_array.length; i++){        
             for(let j = 0; j < 3; j++){                             
                 for(let k = 0; k < 3; k++){
                     if (k != j){                                           
                         for(let l = 0; l < 3; l++){
                             if ((l != k) && (l != j)){
-
-                                //console.log("name is :" + prob_array[i][j][0], ", counter is: " + counter);
 
                                 array[i][counter][j][0] = prob_array[i][0][0]; //housename
                                 array[i][counter][j][1] = prob_array[i][0][1]; //hometeam
@@ -432,7 +407,6 @@ export const houses_obj = {
                                 array[i][counter][k][3] = aux[k]; //result
                                 array[i][counter][k][4] = prob_array[i][1][k+3]; //result odds
                                 
-    
                                 array[i][counter][l][0] = prob_array[i][2][0]; //housename
                                 array[i][counter][l][1] = prob_array[i][2][1]; //hometeam
                                 array[i][counter][l][2] = prob_array[i][2][2]; //awayteam
@@ -454,55 +428,69 @@ export const houses_obj = {
         let array = houses_obj.preSureBetCalc();
         let sum = 0;
         let buffer = [];
-       
-
+    
         for (let i = 0; i < array.length; i++){ 
             for (let j = 0; j < array[i].length; j++){
                 for (let k = 0; k < array[i][j].length; k++){
                     sum = sum + array[i][j][k][4];
-
-                    
-                    
-
-                    
                 }
                 if (sum < 1){
-
-                    buffer.push(array[i][j]);
-                    
-                 
-
-                }
-                
+                    buffer.push(array[i][j]);                   
+                }               
                 sum = 0;
             }
         }
-        //console.log(buffer);
         return buffer;
-
     },
 
     sureBetStake: function() {
         let array = this.sureBetCalc();
-        let buffer = [];
-
-
-        
-
-
-
-
-        let string0 = "O evento e': " + teamA + " x " + teamB; 
-        let string1 = "Seu investimento total e': " + total_stake;
-        let string2 = "Investir R$ " + stake + " no time: " + teamA + "na casa de aposta: " + bookmaker;
-        let string3 = "Investir R$ " + stake + " no empate " + "na casa de aposta: " + bookmaker;
-        let string4 = "Investir R$ " + stake + " no time: " + teamA + "na casa de aposta: " + bookmaker;
-        let string5 = "Seu lucro total sera': " + total_earnings;    
+        let string_array = [];
+        let teamA = "";
+        let teamB = "";
+        let bookmaker_home = "";
+        let bookmaker_draw = "";
+        let bookmaker_away = "";
         let stake = 0;
-        let total_stake = 0;
+        let stake_home = 0;
+        let stake_draw = 0;
+        let stake_away = 0;
+        let potential_winnings = 100;
+        let sum_arbitrages = 0;
+        let total_earnings = 0;
+        let surebet_array = [];
+          
+        for (let i = 0; i < array.length; i++){ 
+            for (let j = 0; j < array[i].length; j++){
+                
+                    stake = (array[i][j][4])*potential_winnings;
+                    sum_arbitrages = sum_arbitrages + stake;
+                }
+                
+                teamA = array[i][0][1];
+                teamB = array[i][0][2];
+                stake_home = array[i][0][4]*potential_winnings;
+                stake_draw = array[i][1][4]*potential_winnings;
+                stake_away = array[i][2][4]*potential_winnings;
+                bookmaker_home = array[i][0][0];
+                bookmaker_draw = array[i][1][0];
+                bookmaker_away = array[i][2][0];
+                total_earnings = potential_winnings - sum_arbitrages;
+                
+                string_array = [["Evento: " + teamA + " x " + teamB],
+                ["Investir R$" + stake_home + " no time: " + teamA + ", na casa de aposta: " + bookmaker_home],
+                ["Investir R$" + stake_draw + " no empate " + ", na casa de aposta: " + bookmaker_draw], 
+                ["Investir R$" + stake_away + " no time: " + teamA + ", na casa de aposta: " + bookmaker_away],
+                ["Ganho condicionado a cada casa de aposta: R$" + potential_winnings],
+                ["Total investido: R$" + sum_arbitrages], 
+                ["Seu lucro total: R$" + total_earnings]];
 
-
-    }
+                surebet_array.push(string_array);
+                sum_arbitrages = 0;
+            
+        }
+        return surebet_array;
+    },
 
     xpathAssembler: function(parent_xpath, id_group) {
         
@@ -534,18 +522,7 @@ export const houses_obj = {
     }
 }
 
-    // rawEventArrayBuilder: async function(url_array, page){
-
-    //     for (let i = 0; i < url_array.length; i++) {
-    //         for(let j = 0; j < houses_obj.houses[i].xpath_group.length; j++){
-      
-    //            await page[i].waitForXPath(houses_obj.houses[i].xpath_group[j]);
-    //            houses_obj.houses[i].raw_events_array[j] = page[i].$x(xpath_group[j], url_array[i]);
-
-    //         }
-    //      }
-    //     console.log(houses_obj.houses[0].raw_events_array[1]);
-    // },
+    
 
     
 
