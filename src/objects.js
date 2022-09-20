@@ -479,8 +479,8 @@ export const houses_obj = {
                 
                 string_array = [["Evento: " + teamA + " x " + teamB],
                 ["Investir R$" + stake_home + " no time: " + teamA + ", na casa de aposta: " + bookmaker_home],
-                ["Investir R$" + stake_draw + " no empate " + ", na casa de aposta: " + bookmaker_draw], 
-                ["Investir R$" + stake_away + " no time: " + teamA + ", na casa de aposta: " + bookmaker_away],
+                ["Investir R$" + stake_draw + " no empate" + ", na casa de aposta: " + bookmaker_draw], 
+                ["Investir R$" + stake_away + " no time: " + teamB + ", na casa de aposta: " + bookmaker_away],
                 ["Ganho condicionado a cada casa de aposta: R$" + potential_winnings],
                 ["Total investido: R$" + sum_arbitrages], 
                 ["Seu lucro total: R$" + total_earnings]];
@@ -497,7 +497,6 @@ export const houses_obj = {
             if (parent_xpath === "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-sportsbook-cards-container/obg-glide/section/div[1]//*"){
                 return (parent_xpath + "[contains(@class,'" + id_group + "')]//span");
             } else {
-                //[contains(@class, 'rcl-MarketHeaderLabel-isdate')]")
                 return (parent_xpath + "[contains(@class,'" + id_group + "')]");
             }
                     
@@ -507,7 +506,6 @@ export const houses_obj = {
          for(let i = 0; i < houses_obj.houses.length; i++){
             for(let j = 0; j < Object.keys(houses_obj.houses[i].id_group).length; j++){
                 houses_obj.houses[i].xpath_group[j] = houses_obj.xpathAssembler(houses_obj.houses[i].parent_xpath, Object.values(houses_obj.houses[i].id_group)[j]);
-                //console.log(this.houses[i].xpath_group[j]);
             }
         }
         

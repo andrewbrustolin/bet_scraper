@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #444;
+    line-height: 1.6;
+    background-color: floralwhite;
+}
+
+.eventos {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.eventos div {
+    flex: 500px;
+    border-style: solid;
+    border-color: black;
+    margin: 10px;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+p:last-child {
+    font-weight: bold;
+}
+
+.links {
+    margin-bottom: 30px; 
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    margin: 10px;
+    font-size: 20px;
+} 
