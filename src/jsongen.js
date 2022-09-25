@@ -1,7 +1,7 @@
 import  { scraper }  from './scraper.js';
 import * as fs from 'fs/promises';
 
-export function jsonGeneration(){
+export async function jsonGeneration(){
 
     async function jsonConversion(){
         const string_array = await scraper();
@@ -13,10 +13,14 @@ export function jsonGeneration(){
         const path = "src/data.json";
         console.log("Creating json data table");
         fs.writeFile(path, data)
-        .then(console.log("File created successfully"));  
+        .then(console.log("File created successfully"));
+        
      }
     
-     jsonFileCreation();
+     await jsonFileCreation();
+//      return new Promise((resolve) => {
+//         resolve();
+//       });  
 }
 
 
