@@ -1,3 +1,7 @@
+Code that scrapes Brazil's national league betting odds data hosted in multiple sports betting websites.
+Returns a table with arbitrage(sure bets) occurrences. 
+
+
 Sports betting websites' scraper and arbitrage calculator execution steps:
 
 Dependencies needed:
