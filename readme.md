@@ -11,9 +11,9 @@ Dependencies needed:
 1 - Open your terminal <br />
 2 - Move into the program directory <br /> 
 3 - Run "node src/server.js" <br />
-5 - Open your browser <br />
-6 - Go to http://localhost:8080 <br />
-7 - Click the "Generate Table" Button <br />
-8 - Wait Json data file generation (about 30s)<br />
-9 - Enjoy your data <br />
-10 - Close the server with "Ctrl + C" in your terminal
+4 - Open your browser <br />
+5 - Go to http://localhost:8080 <br />
+6 - Click the "Generate Table" Button <br />
+7 - Wait Json data file generation <br />
+8 - Enjoy your data <br />
+9 - Close the server with "Ctrl + C" in your terminal
