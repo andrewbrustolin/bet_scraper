@@ -14,6 +14,6 @@ Dependencies needed:
 5 - Open your browser <br />
 6 - Go to http://localhost:8080 <br />
 7 - Click the "Generate Table" Button <br />
-8 - Wait Json data file generation <br />
+8 - Wait Json data file generation (about 30s)<br />
 9 - Enjoy your data <br />
 10 - Close the server with "Ctrl + C" in your terminal

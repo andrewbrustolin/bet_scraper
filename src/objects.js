@@ -154,83 +154,83 @@ export const houses_obj = {
                 return processed_array;
             }
         },
-        {
-            name: "Betsson",
-            url: "https://www.betsson.com/br/apostas-esportivas/futebol/brasil/brasileirao-serie-a",
-            parent_xpath: "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-sportsbook-cards-container/obg-glide/section/div[1]//*",
-            id_group: {
-                home_team_dom_id: "obg-sportsbook-card-participant-label ng-star-inserted",
-                away_team_dom_id: "obg-sportsbook-card-participant-label ng-star-inserted",
-                home_odds_dom_id: "obg-numeric-change ng-star-inserted",
-                draw_odds_dom_id: "obg-numeric-change ng-star-inserted",
-                away_odds_dom_id: "obg-numeric-change ng-star-inserted"
-            },
-            xpath_group: [],
-            raw_events_array: [],
-            processed_events_array: [],
+        // {
+        //     name: "Betsson",
+        //     url: "https://www.betsson.com/br/apostas-esportivas/futebol/brasil/brasileirao-serie-a",
+        //     parent_xpath: "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-m-events-master-detail-tabs-container/obg-m-events-master-detail-container//*",
+        //     id_group: {
+        //         home_team_dom_id: "obg-event-info-participant-name",
+        //         away_team_dom_id: "obg-event-info-participant-name",
+        //         home_odds_dom_id: "obg-numeric-change ng-star-inserted",
+        //         draw_odds_dom_id: "obg-numeric-change ng-star-inserted",
+        //         away_odds_dom_id: "obg-numeric-change ng-star-inserted"
+        //     },
+        //     xpath_group: [],
+        //     raw_events_array: [],
+        //     processed_events_array: [],
             
             
-            rawArrayProcessing: function(raw_events_array){
+        //     rawArrayProcessing: function(raw_events_array){
 
-                const hometeam_array = [];
-                const awayteam_array = [];
-                const homeodds_array = [];
-                const drawodds_array = [];
-                const awayodds_array = [];
+        //         const hometeam_array = [];
+        //         const awayteam_array = [];
+        //         const homeodds_array = [];
+        //         const drawodds_array = [];
+        //         const awayodds_array = [];
 
-                (function hometeam_table(){
+        //         (function hometeam_table(){
                     
-                    for (let j = 0; j < raw_events_array[0].length; j++){
-                        if ((j % 2) == 0){
-                            hometeam_array.push(raw_events_array[0][j]);
-                        }
-                    }
-                })();
-                (function awayteam_table(){
+        //             for (let j = 0; j < raw_events_array[0].length; j++){
+        //                 if ((j % 2) == 0){
+        //                     hometeam_array.push(raw_events_array[0][j]);
+        //                 }
+        //             }
+        //         })();
+        //         (function awayteam_table(){
                     
-                    for (let j = 0; j < raw_events_array[1].length; j++){
-                        if ((j % 2) != 0){
-                            awayteam_array.push(raw_events_array[1][j]);
-                        }                     
-                    }
-                })();
-                (function homeodds_table(){
+        //             for (let j = 0; j < raw_events_array[1].length; j++){
+        //                 if ((j % 2) != 0){
+        //                     awayteam_array.push(raw_events_array[1][j]);
+        //                 }                     
+        //             }
+        //         })();
+        //         (function homeodds_table(){
                     
-                    for (let j = 0; j < raw_events_array[2].length; j = j + 3){
-                        homeodds_array.push(raw_events_array[2][j]);
-                    }                   
-                })();
-                (function drawodds_table(){
+        //             for (let j = 0; j < raw_events_array[2].length; j = j + 3){
+        //                 homeodds_array.push(raw_events_array[2][j]);
+        //             }                   
+        //         })();
+        //         (function drawodds_table(){
                     
-                    for (let j = 1; j < raw_events_array[3].length; j = j + 3){
-                        drawodds_array.push(raw_events_array[3][j]);
-                    }                   
-                })();
-                (function awayodds_table(){
+        //             for (let j = 1; j < raw_events_array[3].length; j = j + 3){
+        //                 drawodds_array.push(raw_events_array[3][j]);
+        //             }                   
+        //         })();
+        //         (function awayodds_table(){
                     
-                    for (let j = 2; j < raw_events_array[4].length; j = j + 3){
-                        awayodds_array.push(raw_events_array[4][j]);
-                    }                   
-                })();
+        //             for (let j = 2; j < raw_events_array[4].length; j = j + 3){
+        //                 awayodds_array.push(raw_events_array[4][j]);
+        //             }                   
+        //         })();
                 
-                const processed_array = [];
-                const processed_array_size = (raw_events_array[0].length)/2;
-                // 2 teams, so the array size after processing must be half length
-                for (let i = 0; i < processed_array_size; i++) {
-                        processed_array[i] = [];
+        //         const processed_array = [];
+        //         const processed_array_size = (raw_events_array[0].length)/2;
+        //         // 2 teams, so the array size after processing must be half length
+        //         for (let i = 0; i < processed_array_size; i++) {
+        //                 processed_array[i] = [];
                     
-                }
+        //         }
                 
-                for (let i = 0; i < processed_array_size; i++){
-                    processed_array[i].push(hometeam_array[i]);
-                    processed_array[i].push(awayteam_array[i]);
-                    processed_array[i].push(homeodds_array[i]);
-                    processed_array[i].push(drawodds_array[i]);
-                    processed_array[i].push(awayodds_array[i]);
-                }
-                return processed_array;
-            }
-        },
+        //         for (let i = 0; i < processed_array_size; i++){
+        //             processed_array[i].push(hometeam_array[i]);
+        //             processed_array[i].push(awayteam_array[i]);
+        //             processed_array[i].push(homeodds_array[i]);
+        //             processed_array[i].push(drawodds_array[i]);
+        //             processed_array[i].push(awayodds_array[i]);
+        //         }
+        //         return processed_array;
+        //     }
+        // },
 
         {
             name: "Betway",
@@ -494,12 +494,7 @@ export const houses_obj = {
 
     xpathAssembler: function(parent_xpath, id_group) {
         
-            if (parent_xpath === "/html/body/obg-app-root/div/obg-m-betting-layout-container/obg-m-sportsbook-layout-container/obg-m-sidenav/mat-sidenav-container/mat-sidenav-content/div/div/ng-scrollbar/div/div/div/div/section/ng-component/obg-m-category-container/obg-sportsbook-cards-container/obg-glide/section/div[1]//*"){
-                return (parent_xpath + "[contains(@class,'" + id_group + "')]//span");
-            } else {
-                return (parent_xpath + "[contains(@class,'" + id_group + "')]");
-            }
-                    
+        return (parent_xpath + "[contains(@class,'" + id_group + "')]");            
     },
 
     xpathGroupSetter: function() {
